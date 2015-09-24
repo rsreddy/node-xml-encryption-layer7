@@ -1,13 +1,11 @@
-<KeyInfo xmlns="http://www.w3.org/2000/09/xmldsig#">
-  <e:EncryptedKey xmlns:e="http://www.w3.org/2001/04/xmlenc#">
-    <e:EncryptionMethod Algorithm="<%= keyEncryptionMethod %>">
-      <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-    </e:EncryptionMethod>
-    <KeyInfo>
-      <%- encryptionPublicCert %>
-    </KeyInfo>
-    <e:CipherData>
-      <e:CipherValue><%= encryptedKey %></e:CipherValue>
-    </e:CipherData>
-  </e:EncryptedKey>
-</KeyInfo>
+<dsig:KeyInfo xmlns:dsig="http://www.w3.org/2000/09/xmldsig#">
+  <xenc:EncryptedKey xmlns:xenc="http://www.w3.org/2001/04/xmlenc#">
+    <xenc:EncryptionMethod Algorithm="<%= keyEncryptionMethod %>" />
+    <dsig:KeyInfo xmlns:dsig="http://www.w3.org/2000/09/xmldsig#">
+       <%- encryptionPublicCert %>
+    </dsig:KeyInfo>
+    <xenc:CipherData>
+      <xenc:CipherValue><%= encryptedKey %></xenc:CipherValue>
+    </xenc:CipherData>
+  </xenc:EncryptedKey>
+</dsig:KeyInfo>
