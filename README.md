@@ -1,15 +1,19 @@
 [![Build Status](https://travis-ci.org/auth0/node-xml-encryption.png)](https://travis-ci.org/auth0/node-xml-encryption)
 
-W3C XML Encryption implementation for node.js (http://www.w3.org/TR/xmlenc-core/)
+W3C XML Encryption Layer 7 implementation for node.js (http://www.w3.org/TR/xmlenc-core/)
+
+**Please note this is a fork from the original xml-encryption found here: https://github.com/auth0/node-xml-encryption.git**
+
+**This node module changes the original XML template to adhere to Computer Associate's Layer 7 Policy Manager**
 
 ## Usage
 
-    npm install xml-encryption
+    npm install xml-encryption-layer7
 
 ### encrypt
 
 ~~~js
-var xmlenc = require('xml-encryption');
+var xmlenc = require('xml-encryption-layer7');
 
 var options = {
   rsa_pub: fs.readFileSync(__dirname + '/your_rsa.pub'),
@@ -26,23 +30,21 @@ xmlenc.encrypt('content to encrypt', options, function(err, result) {
 Result:
 ~~~xml
 <xenc:EncryptedData Type="http://www.w3.org/2001/04/xmlenc#Element" xmlns:xenc="http://www.w3.org/2001/04/xmlenc#">
-  <xenc:EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#aes-256-cbc" />
-    <KeyInfo xmlns="http://www.w3.org/2000/09/xmldsig#">
-      <e:EncryptedKey xmlns:e="http://www.w3.org/2001/04/xmlenc#">
-        <e:EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#rsa-oaep-mgf1p">
-          <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        </e:EncryptionMethod>
-        <KeyInfo>
-          <X509Data><X509Certificate>MIIEDzCCAveg... base64 cert... q3uaLvlAUo=</X509Certificate></X509Data>
-        </KeyInfo>
-        <e:CipherData>
-          <e:CipherValue>sGH0hhzkjmLWYYY0gyQMampDM... encrypted symmetric key ...gewHMbtZafk1MHh9A==</e:CipherValue>
-        </e:CipherData>
-      </e:EncryptedKey>
-    </KeyInfo>
+  <xenc:EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#aes128-cbc" />
+  <dsig:KeyInfo xmlns:dsig="http://www.w3.org/2000/09/xmldsig#">
+  <xenc:EncryptedKey xmlns:xenc="http://www.w3.org/2001/04/xmlenc#">
+    <xenc:EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#rsa-oaep-mgf1p" />
+    <dsig:KeyInfo xmlns:dsig="http://www.w3.org/2000/09/xmldsig#">
+       <dsig:X509Data><dsig:X509Certificate>...encrypted content...</dsig:X509Certificate></dsig:X509Data>
+    </dsig:KeyInfo>
     <xenc:CipherData>
-        <xenc:CipherValue>V3Vb1vDl055Lp92zvK..... encrypted content.... kNzP6xTu7/L9EMAeU</xenc:CipherValue>
+      <xenc:CipherValue>...encrypted content...</xenc:CipherValue>
     </xenc:CipherData>
+  </xenc:EncryptedKey>
+</dsig:KeyInfo>
+  <xenc:CipherData>
+    <xenc:CipherValue>...encrypted content...</xenc:CipherValue>
+  </xenc:CipherData>
 </xenc:EncryptedData>
 ~~~
 
